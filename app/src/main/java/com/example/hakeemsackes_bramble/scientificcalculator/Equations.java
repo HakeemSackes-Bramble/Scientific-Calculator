@@ -2,6 +2,8 @@ package com.example.hakeemsackes_bramble.scientificcalculator;
 
 import java.math.BigInteger;
 
+import static com.example.hakeemsackes_bramble.scientificcalculator.MainActivity.equation;
+
 /**
  * Created by hakeemsackes-bramble on 10/5/16.
  */
@@ -60,5 +62,20 @@ class Equations {
         return Math.tan(input1);
     }
 
+    static double pi() {
+        return Math.PI;
+    }
+
+    static double e() {
+        return Math.E;
+    }
+
+    static double ln(double input1) {
+        return (Math.log(input1)) / Math.log(Math.E);
+    }
+
+    static void parenthesis(int stack, int queue) {
+        Answer.doPemdas(equation.subList(stack, queue));
+    }
 
 }

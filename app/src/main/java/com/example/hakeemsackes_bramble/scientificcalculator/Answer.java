@@ -3,7 +3,7 @@ package com.example.hakeemsackes_bramble.scientificcalculator;
 import android.app.Activity;
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.add;
 import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.divide;
@@ -11,29 +11,13 @@ import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.fa
 import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.multiply;
 import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.power;
 import static com.example.hakeemsackes_bramble.scientificcalculator.Equations.subtract;
-import static com.example.hakeemsackes_bramble.scientificcalculator.MainActivity.answer;
 
 /**
  * Created by hakeemsackes-bramble on 10/8/16.
  */
 
 public class Answer extends Activity {
-    static void doPemdas(ArrayList<String> equation) {
-//        if (equation.size() == 0) {
-//            answer = 0;
-//        } else {
-//            try {
-//                answer = Double.valueOf(equation.get(0));
-//            } catch (NumberFormatException error) {
-//                if (equation.get(0).equals("-")) {
-//                    answer = 0;
-//                } else {
-////                    TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
-////                    screenDisplay.setText("-ERROR-");
-//                    return;
-//                }
-//            }
-//        }
+    static List<String> doPemdas(List<String> equation) {
 
         for (int i = 0; i < equation.size(); i++) {
             if (equation.get(i).equals("!")) {
@@ -99,8 +83,10 @@ public class Answer extends Activity {
             }
         }
         Log.d("", "doPemdas: " + equation.toString());
-        answer = Double.valueOf(equation.get(0));
+       return equation;
     }
+
+
 
 
     //TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);

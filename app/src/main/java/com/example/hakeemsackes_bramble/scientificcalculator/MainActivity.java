@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import static com.example.hakeemsackes_bramble.scientificcalculator.DisplayValues.displayText;
 
@@ -15,39 +16,60 @@ import static com.example.hakeemsackes_bramble.scientificcalculator.DisplayValue
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "eqlist";
     static final String EMPTYSTRING = "";
-    static ArrayList<String> equation = new ArrayList<>();             // i'll need a place to represent each users input in an array for processing
-    static double answer;                                              // a place to store the double value of the answer
-    static String eqDisplay = EMPTYSTRING;                             // i might need to store the answer as a string before displaying it // not used
-    static String numberAsString = EMPTYSTRING;                        // a placeholder for holding the string number values before adding to equation arrayList
-    //int index = 0;                                                   // made to keep track of the number of buttons the user has clicked in order to log the location/ might not need it
-    int place = 0;                                                     // a place holder seperate from index. needed for adding multiple numbers
-    static ArrayList<Integer> multiplyAndDivide = new ArrayList<>();   //the idea is to make a pemdas ordered list of all of the index values of the operations
-    static ArrayList<Integer> addAndSubtract = new ArrayList<>();      // same as above
-    static ArrayList<Integer> openParenthesis = new ArrayList<>();
+
+
+    static ArrayList<String> equation = new ArrayList<>();
+    // i'll need a place to represent each users input in an array for processing
+    static double answer;
+    // a place to store the double value of the answer
+    static String eqDisplay = EMPTYSTRING;
+    // i might need to store the answer as a string before displaying it // not used
+    static String numberAsString = EMPTYSTRING;
+    // a placeholder for holding the string number values before adding to equation arrayList
+
+    //int index = 0;
+    // NOT NEEDED made to keep track of the number of buttons the user has clicked in order to log the location
+    int place = 0;
+    // a place holder seperate from index. needed for adding multiple numbers
+    static ArrayList<Integer> multiplyAndDivide = new ArrayList<>();
+    //the idea is to make a pemdas ordered list of all of the index values of the operations
+    static ArrayList<Integer> addAndSubtract = new ArrayList<>();
+    // same as above
+    static Stack<Integer> openParenthesis = new Stack<>();
     static ArrayList<Integer> closeParenthesis = new ArrayList<>();
-    static boolean isAnswer = false;                                   // needed in order to make the necessary subtraction values for the equation in one button
 
-
-
+    static boolean isAnswer;
+    // needed in order to make the necessary subtraction values for the equation in one button
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
+        screenDisplay.setText(displayText());
     }
 
     public void getNumber(View v) {
+        Log.d("wtf", "getboolean: number clicked" + (isAnswer));
         equation.add(EMPTYSTRING);
         Button text = (Button) v;
         String command = text.getText().toString();
-        if ((numberAsString.length() != 0 && command.equals("-")) || isAnswer) {
-            equation.add(command);
-            place = equation.size()-1;
-            numberAsString=EMPTYSTRING;
+        boolean isminus = command.equals("-");
+        Log.d("wtf", "getboolean: " + (isAnswer));
+        if (isAnswer && !isminus) {
+            equation.remove(EMPTYSTRING);
+            return;
         } else {
-            numberAsString += command;
-            equation.set(place, numberAsString);
+
+            if ((numberAsString.length() != 0 || isAnswer) && command.equals("-")) {
+                equation.add(command);
+                place = equation.size() - 1;
+                numberAsString = EMPTYSTRING;
+            } else {
+                numberAsString += command;
+                equation.set(place, numberAsString);
+            }
         }
         isAnswer = false;
         TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
@@ -57,23 +79,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getCommand(View v) { // ex: trig, power, log, factorial  operations
-//        Math.tan();
-//        Math.cos();
-//        Math.sin();
-//        Math.log();
-        // factorial
-//        int input;
-//        int starter = 1;// the number that precedes the factorial sign
-//        for (int i = 1; i < input ; i++) {
-//            starter *= i;
-//        }
-    }
-
-    public void Parenthesis(View v){
+    public void getFunctions(View v) {
+        // ex: trig, power, log, factorial operations, parens, euler, and pi
+        // different from the getCommand function because they have the issue of
+        // needing to add multiplication symbol when necessary.
+        // parens, pi, and Eulers number is included in this for the very issue stated above
         equation.add(EMPTYSTRING);
         Button text = (Button) v;
         String command = text.getText().toString();
+        equation.add(command);
+        TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
+        screenDisplay.setText(displayText());
+        equation.remove(EMPTYSTRING);
+
+    }
+
+    public void Parenthesis(View v) {
+        equation.add(EMPTYSTRING);
+        Button text = (Button) v;
+        String command = text.getText().toString();
+        place = equation.size();
         equation.add(command);
         TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
         screenDisplay.setText(displayText());
@@ -87,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         multiplyAndDivide.clear();
         addAndSubtract.clear();
         numberAsString = EMPTYSTRING;
+        isAnswer = false;
         TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
         screenDisplay.setText(displayText());
         TextView answerDisplay = (TextView) findViewById(R.id.ansDisplay);
@@ -95,51 +121,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void getAnswer(View v) {
         try {
-//            if (equation.size() == 0) {
-//                answer = 0;
-//            } else {
-//                try {
-//                    answer = Double.valueOf(equation.get(0));
-//                } catch (NumberFormatException error) {
-//                    if (equation.get(0).equals("-")) {
-//                        answer = 0;
-//                    } else {
-//                        TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
-//                        screenDisplay.setText("-ERROR-");
-//                        return;
-//                    }
-//                }
-//            }
-//            for (int i = 0; i < equation.size() - 1; i++) {
-//                if (equation.get(i).equals("/")) {
-//                    double denominator = Double.valueOf(equation.get(i + 1));
-//                    answer = divide(answer, denominator);
 //
-//                } else if (equation.get(i).equals("+")) {
-//                    double denominator = Double.valueOf(equation.get(i + 1));
-//                    answer = add(answer, denominator);
-//
-//                } else if (equation.get(i).equals("-")) {
-//                    double denominator = Double.valueOf(equation.get(i + 1));
-//                    answer = subtract(answer, denominator);
-//
-//                } else if (equation.get(i).equals("*")) {
-//                    double multiple = Double.valueOf(equation.get(i + 1));
-//                    answer = multiply(answer, multiple);
-//                }
             Answer.doPemdas(equation);
+            answer = Double.valueOf(equation.get(0));
+            int answerInt = (int) answer;
+            if (answerInt == answer) {
+                TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
+                screenDisplay.setText(EMPTYSTRING + answerInt);
+                isAnswer = true;
+                place = equation.size();
+                return;
+            }
             TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
             screenDisplay.setText(EMPTYSTRING + answer);
+
+
         } catch (NumberFormatException r) {
             TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
             screenDisplay.setText("-ERROR-");
-        } catch(IndexOutOfBoundsException t){
+        } catch (IndexOutOfBoundsException t) {
             TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
             screenDisplay.setText("-ERROR-");
         }
         isAnswer = true;
         place = equation.size();
         numberAsString = EMPTYSTRING;
+        Log.d("wtf", "getboolean in answer: " + (isAnswer));
     }
 
     public void getCommands(View v) { // get Input from user and get users preferred operations
@@ -154,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "getCommand: " + equation);
         place = equation.size();
         Log.d(TAG, "getCommands: " + place);
+        isAnswer = false;
 
         if (command.equals("/") || command.equals("*")) {
             multiplyAndDivide.add(place - 1);
@@ -161,11 +169,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (command.equals("+") || command.equals("-")) {
             addAndSubtract.add(place - 1);
             Log.d(TAG, "location of addition: " + addAndSubtract.toString());
-        }else if(command.equals("(")){
-            openParenthesis.add(place-1);
+        } else if (command.equals("(")) {
+            openParenthesis.add(place - 1);
             Log.d("openparenthesis", openParenthesis.toString());
-        }else if(command.equals(")")){
-            closeParenthesis.add(0,place-1);
+        } else if (command.equals(")")) {
+            closeParenthesis.add(0, place - 1);
             Log.d("closeparenthesis", closeParenthesis.toString());
         }
     }
@@ -187,16 +195,9 @@ public class MainActivity extends AppCompatActivity {
             screenDisplay.setText(displayText());
             TextView answerDisplay = (TextView) findViewById(R.id.ansDisplay);
             answerDisplay.setText(EMPTYSTRING);
+            isAnswer = equation.size()%2==1;
         }
-    }
 
-    public static void main(String[] args) {
-        ArrayList<Integer> hi = new ArrayList<>();
-        hi.add(0);
-        hi.add(1);
-        hi.add(2);
-        hi.add(hi.size()-2, 0);
-        System.out.println(hi);
     }
 
 }
