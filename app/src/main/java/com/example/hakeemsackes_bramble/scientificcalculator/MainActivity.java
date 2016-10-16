@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import static com.example.hakeemsackes_bramble.scientificcalculator.DisplayValues.displayText;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     static final String EMPTYSTRING = "";
 
 
-    static ArrayList<String> equation = new ArrayList<>();
+    static List<String> equation = new ArrayList<>();
     // i'll need a place to represent each users input in an array for processing
     static double answer;
     // a place to store the double value of the answer
@@ -86,8 +87,11 @@ public class MainActivity extends AppCompatActivity {
         // parens, pi, and Eulers number is included in this for the very issue stated above
         equation.add(EMPTYSTRING);
         Button text = (Button) v;
-        String command = text.getText().toString();
-        equation.add(command);
+        String function = text.getText().toString();
+        equation.add(function);
+        if(!function.equals("pi") || !function.equals("e")) {
+            equation.add("(");
+        }
         TextView screenDisplay = (TextView) findViewById(R.id.eqDisplay);
         screenDisplay.setText(displayText());
         equation.remove(EMPTYSTRING);
@@ -138,10 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (NumberFormatException r) {
             TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
-            screenDisplay.setText("-ERROR-");
-        } catch (IndexOutOfBoundsException t) {
-            TextView screenDisplay = (TextView) findViewById(R.id.ansDisplay);
-            screenDisplay.setText("-ERROR-");
+            screenDisplay.setText("-ERROR-1");
         }
         isAnswer = true;
         place = equation.size();

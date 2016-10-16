@@ -1,6 +1,7 @@
 package com.example.hakeemsackes_bramble.scientificcalculator;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import static com.example.hakeemsackes_bramble.scientificcalculator.MainActivity.equation;
 
@@ -45,9 +46,8 @@ class Equations {
     static double power(double input1, double input2) {
         return Math.pow(input1, input2);
     }
-
     static double log(double input1) {
-        return Math.log(input1);
+        return Math.log10(input1);
     }
 
     static double sin(double input1) {
@@ -74,8 +74,10 @@ class Equations {
         return (Math.log(input1)) / Math.log(Math.E);
     }
 
+
+
     static void parenthesis(int stack, int queue) {
-        Answer.doPemdas(equation.subList(stack, queue));
+        Answer.doPemdas((ArrayList<String>) equation.subList(stack, queue));
     }
 
 }
