@@ -167,7 +167,11 @@ public class Answer extends Activity {
                 Log.d("parens", equate.toString());
                 equate.remove(lastParens);
                 equate.remove(lastParens + 1);
-                i = lastParens;
+                if (openParens.size() == 0) {
+                    i = lastParens;
+                } else {
+                    i = openParens.peek();
+                }
             }
         }
         return equate;
@@ -180,7 +184,7 @@ public class Answer extends Activity {
         }
         if (!(list.get(index - 1).equals("/") || list.get(index - 1).equals("+") ||
                 list.get(index - 1).equals("-") || list.get(index - 1).equals("*")
-                || list.get(index - 1).equals("("))) {
+                || isWordfunction(list,index-1))){
             list.add(index, "*");
             i++;
         }
@@ -201,7 +205,7 @@ public class Answer extends Activity {
                 "("
         };
         for (int i = 0; i < wordproblems.length; i++) {
-            isword = wordproblems[i].equals(list.get(index + 1));
+            isword = wordproblems[i].equals(list.get(index));
             if (isword) break;
         }
         return isword;
